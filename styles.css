@@ -440,6 +440,14 @@ html {
         min-width: 2rem;
         max-width: fit-content;
     }
-    
+
+    .remaining-tasks{
+        font-size: 0.7rem;
+    }
+
+    .list-area{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 
 }
