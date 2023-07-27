@@ -1,0 +1,530 @@
+<-------------HTML Code------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <!-- Icon Used -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Bootstrap File -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Google Fonts File -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Main Css File -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+
+
+     <!-- Main Frame Container -->
+
+    <div class="container">
+
+        <!-- Header Section -->
+
+        <section id="heading-section">
+            <div class="name-area">
+                <span class="name-initial">T</span>
+                <h6 class="full-name">Tawfiq Mawani</h6>
+            </div>
+            <h1 class="today">Today</h1>
+        </section>
+
+        <!-- List Section -->
+
+        <section id="list-section">
+            <div class="enter-space">
+                <button class="submit-btn"><i class="bi bi-plus icon"></i></button>
+                <input placeholder="New task" class="input-task" type="text">
+            </div>
+
+                <div class="select-menu">
+                    <div class="select-button">
+                        <span class="sBtn-text">Select Priority</span>
+                        <i class="bx bx-chevron-down"></i>
+                    </div>
+
+                    <ul class="options">
+                        <li class="option"><span class="option-text low">Low</span></li>
+                        <li class="option"><span class="option-text med">Med</span></li>
+                        <li class="option"><span class="option-text high">High</span></li>
+                    </ul>
+
+                </div>
+
+                <div class="list-area">
+                    
+                </div>
+        </section>
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- JQuery File -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.0.js"
+    integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+    crossorigin="anonymous"></script>
+    <!-- Main Javascript File -->
+    <script src="index.js"></script>
+</body>
+</html>
+
+<----------------------------Javascript Code------------------->
+// Code for declaring variable for the priority option menu
+const selectionMenu=document.querySelector(".select-menu");
+      selectBtn=selectionMenu.querySelector(".select-button");
+      allOptions=selectionMenu.querySelectorAll(".option");
+      btnText=selectionMenu.querySelector(".sBtn-text");
+
+//Code for declaring other variables
+const submitBtn=document.querySelector(".submit-btn");
+const taskArea=document.querySelector(".list-area");
+var userEnteredTask=document.querySelector(".input-task");
+var listItemNumber=1;
+var selectedChoice;
+var prioritySelectText;
+
+
+
+//Used to open priority list when enter is clicked on input task area
+userEnteredTask.addEventListener("keypress",(event)=>{
+    if(event.charCode===13 && userEnteredTask.value!=""){
+        selectionMenu.classList.add("active");
+    }
+})
+
+//Function to get user input
+function getTask(){
+    return userEnteredTask.value;
+}
+
+//function to print user input
+function printTask(userEntry,userPriority){
+
+    var actualTaskBlock=document.createElement("div");
+
+    var priorityBlock=document.createElement("span");
+
+    actualTaskBlock.setAttribute("id",listItemNumber);
+
+    
+    //Creating delete BTN
+    var deleteBtn=document.createElement("button");
+    deleteBtn.setAttribute("class",listItemNumber);
+    deleteBtn.classList.add("delete-btn")
+
+    listItemNumber++;
+
+    actualTaskBlock.textContent=userEntry;
+
+    actualTaskBlock.classList.add("task-style");
+
+    priorityBlock.textContent=userPriority;
+
+    switch(userPriority){
+        case "Low":
+            priorityBlock.classList.add("low");
+            break;
+        case "Med":
+            priorityBlock.classList.add("med");
+            break;
+        case "High":
+            priorityBlock.classList.add("high");
+            break;
+        default:
+            taskArea.append(actualTaskBlock);
+            priorityBlock.textContent="";
+    }
+
+    priorityBlock.classList.add("extra-mod");
+
+    actualTaskBlock.append(priorityBlock); //Use of JQuery
+    actualTaskBlock.prepend(deleteBtn); //Use of JQuery
+
+    //Giving a proper pattern to add my task based on priority
+    const lowElement=taskArea.querySelector(".low");
+    const medElement=taskArea.querySelector(".med");
+    const highElement=taskArea.querySelector(".high");
+
+    //If low
+    if(priorityBlock.classList.contains("low")){
+            taskArea.append(actualTaskBlock);
+    }
+
+    //If Med
+    if(priorityBlock.classList.contains("med")){
+        if(lowElement){
+            lowElement.parentNode.insertAdjacentElement("beforebegin",actualTaskBlock); //Same as insertBefore
+        }
+        else{
+            taskArea.append(actualTaskBlock);
+        }
+    }
+
+    //If High
+    if(priorityBlock.classList.contains("high")){
+        if(medElement){
+            medElement.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
+        }
+
+        else if(lowElement){
+            lowElement.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
+        }
+
+    else{
+        taskArea.append(actualTaskBlock);
+        }
+    }
+
+
+    userEnteredTask.value="";
+    btnText.textContent="Select Priority";
+    btnText.className="sBtn-text";
+
+
+}
+
+
+// Code used to make the Priority Section Work
+
+selectBtn.addEventListener("click",()=>selectionMenu.classList.toggle("active"));
+
+allOptions.forEach(option=>{
+    option.addEventListener("click",()=>{
+        var selectedChoice=option.querySelector(".option-text");
+        btnText.textContent=selectedChoice.textContent;
+        selectionMenu.classList.remove("active");
+
+        var choiceClassList=selectedChoice.classList;
+
+        btnText.className="sBtn-text";
+
+
+        choiceClassList.forEach(thisClass=>{
+            btnText.classList.add(thisClass);
+        })
+
+    })
+})
+
+
+//Main function to be called when plus button is clicked
+submitBtn.addEventListener("click",()=>{
+
+    prioritySelectText=btnText.textContent;
+
+    if(userEnteredTask.value!=""){
+
+        printTask(getTask(),prioritySelectText);
+        console.log("Task Submitted");
+    }
+
+
+})
+
+
+//Function to delete task
+
+function deleteTask(event){
+
+    var taskElement=event.target;
+    console.log(taskElement);
+
+    //Actual Box
+    if(taskElement){
+        taskElement.classList.toggle("blue-box");
+        taskElement.nextElementSibling.classList.toggle("delete-color");
+        taskElement.closest(".task-style").classList.toggle("delete-effect");
+    }
+
+    // Audio
+    if(taskElement.classList.contains("blue-box")){
+        var audio=new Audio("sounds/complete_sound.wav");
+        audio.play();
+    }
+
+    var tickIcon = taskElement.querySelector(".bx-check");
+
+    if(!tickIcon){
+        var tickIcon=document.createElement("i");
+        tickIcon.setAttribute("class","bx bx-check");
+        taskElement.append(tickIcon);
+    }
+    else{
+        tickIcon.remove();
+    }
+
+}
+
+//Finding which button was clicked for delete
+
+taskArea.addEventListener("click",(event)=>{
+
+    if(event.target.classList.contains("delete-btn")){
+        deleteTask(event);
+    }
+})
+
+<-----------------------------------CSS Code-------------------------------------->
+body{
+    font-family: 'Poppins', sans-serif;
+}
+
+#heading-section{
+    margin-top: 3rem;
+}
+
+.name-initial{
+    text-align: center;
+    color: white;
+    width: 2.45rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    background-color: #2C2C2E;
+    display: inline-block;
+}
+
+.full-name{
+    display: inline-block;
+    color: #2C2C2E;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 0.8rem;
+}
+
+.today{
+    color: #2C2C2E;
+    font-weight: 600;
+    font-size: 4.5rem;
+    margin: 4.5rem 0 2.5rem 0;
+}
+
+#list-section{
+    padding: 3rem 3rem;
+    /* border: 1px solid red; */
+}
+
+.submit-btn{
+    border: none;
+    text-decoration: none;
+    background: none;
+}
+
+.icon{
+    font-size: 1.5rem;
+    color: #1E63EC;
+}
+
+.input-task{
+    background: none;
+    border: 1px solid #2c2c2e31;
+    border-radius: 0.5rem;
+    width: 35rem;   
+    padding: 0.6rem;
+    font-weight: 400;
+    outline: none;
+}
+
+.input-task::placeholder{
+    color: #2c2c2e74;
+}
+
+.input-task:hover{
+    transition-duration: 0.1s;
+    transition-timing-function: linear;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.041), 0 6px 20px 0 rgba(0, 0, 0, 0.079);
+}
+
+.input-task:focus{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.026), 0 6px 20px 0 rgba(0, 0, 0, 0.049);
+}
+
+.select-menu{
+    position: relative;
+    width: 10rem;
+    margin: 1.2rem 0 0 2.5rem;
+}
+
+.select-menu .select-button{
+    font-size: 0.9rem;
+    font-weight: 500;
+    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    color: rgba(41, 41, 41, 0.356);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.select-button i{
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.select-menu.active .select-button i{
+    transform: rotate(-180deg);
+}
+
+.select-menu .options{
+    display: none;
+    position: relative;
+    list-style-type: none;
+    border: 1px solid #2c2c2e13;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 0 0 3px rgba(0,0,0,0.1);
+    margin-top: 0.56rem;
+}
+
+.select-menu.active .options{
+    position: absolute;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    display: block;
+}
+
+.select-menu .options .option{
+    margin-bottom: 0.2rem;
+    display: flex;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.select-menu.active .low{
+    width: 100%;
+    transition: 0.5s;
+}
+.select-menu.active .med{
+    width: 100%;
+    transition: 0.5s;
+}
+.select-menu.active .high{
+    width: 100%;
+    transition: 0.5s;
+}
+
+.select-menu .options .option:hover .low{
+    border: 1px solid rgba(0, 128, 0, 0.4);
+}
+.select-menu .options .option:hover .med{
+    border: 1px solid #e5821081;
+}
+.select-menu .options .option:hover .high{
+    border: 1px solid #e510106f;
+}
+
+.low,.med,.high{
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: 5rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.4rem;
+    transition: 0.3s;
+}
+
+.low{
+    background-color: #E3F4EA;
+    color: #17AF54;
+}
+.med{
+    background-color: #FFE8D3;
+    color: #E58310;
+}
+.high{
+    background-color: #FFE1E1;
+    color: #E51010;
+}
+
+.delete-color{
+    background-color: #EDEDEF;
+    color: #a9abae;
+}
+
+.extra-mod{
+    display: inline-block;
+    margin-left: 1rem;
+    width: 4rem;
+}
+
+.list-area{
+    margin-top: 2rem;
+    padding: 0.3rem 2.5rem;
+}
+
+.task-style{
+    min-width: 40rem;
+    max-width: fit-content;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.delete-btn{
+    display: inline-flex;
+    background-color: transparent;
+    margin-right: 0.6rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c2c2e31;
+    border-radius: 0.2rem;
+}
+
+.blue-box{
+    background-color: #1E63EC;
+}
+
+.delete-effect{
+    background-color: #F7F7F7;
+    color: #a8a3a3;
+    transition: .5s;
+}
+
+.bx-check{
+    color: white;
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+/* For Mobile Phones */
+@media (max-width:994px){
+    .today{
+        font-size: 3.5rem;
+    }
+    #list-section{
+        padding: 0rem;
+    }
+    .input-task{
+        min-width: 15rem;
+        max-width: fit-content;
+    }
+
+    .task-style{
+        min-width: 2rem;
+        max-width: fit-content;
+    }
+    
+
+}
