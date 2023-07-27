@@ -432,8 +432,8 @@ html {
         padding: 0rem;
     }
     .input-task{
-        min-width: 15rem;
-        max-width: fit-content;
+        min-width: 7rem;
+        max-width: 11rem;
     }
 
     .task-style{
