@@ -40,6 +40,9 @@ function printTask(userEntry,userPriority){
 
     var actualTaskBlock=document.createElement("div");
 
+    var textWrapper=document.createElement("div");
+    textWrapper.classList.add("task-text");
+
     var priorityBlock=document.createElement("span");
 
     actualTaskBlock.setAttribute("id",listItemNumber);
@@ -59,7 +62,7 @@ function printTask(userEntry,userPriority){
 
     listItemNumber++;
 
-    actualTaskBlock.textContent=userEntry;
+    textWrapper.textContent=userEntry;
 
     actualTaskBlock.classList.add("task-style");
 
@@ -82,8 +85,9 @@ function printTask(userEntry,userPriority){
 
     priorityBlock.classList.add("extra-mod");
 
-    actualTaskBlock.append(priorityBlock); //Use of JQuery
+    textWrapper.append(priorityBlock); //Use of JQuery
     actualTaskBlock.prepend(deleteBtn); //Use of JQuery
+    actualTaskBlock.append(textWrapper); //Use of JQuery
 
     //Giving a proper pattern to add my task based on priority
     const lowElement=taskArea.querySelector(".low");
@@ -98,7 +102,7 @@ function printTask(userEntry,userPriority){
     //If Med
     if(priorityBlock.classList.contains("med")){
         if(lowElement){
-            lowElement.parentNode.insertAdjacentElement("beforebegin",actualTaskBlock); //Same as insertBefore
+            lowElement.parentNode.parentNode.insertAdjacentElement("beforebegin",actualTaskBlock); //Same as insertBefore
         }
         else{
             taskArea.append(actualTaskBlock);
@@ -108,11 +112,11 @@ function printTask(userEntry,userPriority){
     //If High
     if(priorityBlock.classList.contains("high")){
         if(medElement){
-            medElement.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
+            medElement.parentNode.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
         }
 
         else if(lowElement){
-            lowElement.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
+            lowElement.parentNode.parentNode.insertAdjacentElement("beforebegin", actualTaskBlock);
         }
 
     else{
@@ -177,7 +181,7 @@ function deleteTask(event){
     if(taskElement){
         taskElement.classList.toggle("checked");
         taskElement.classList.toggle("blue-box");
-        taskElement.nextElementSibling.classList.toggle("delete-color");
+        taskElement.nextElementSibling.querySelector("span").classList.toggle("delete-color");
         taskElement.closest(".task-style").classList.toggle("delete-effect");
 
     }
